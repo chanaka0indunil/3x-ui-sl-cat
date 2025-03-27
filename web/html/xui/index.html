@@ -51,6 +51,52 @@
   .ant-card-actions {
     background: transparent;
   }
+  .status-card {
+    padding: 24px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .status-col {
+    text-align: center;
+  }
+
+  .status-details {
+    margin-top: 10px;
+    color: #555;
+    font-size: 14px;
+  }
+
+  .ant-progress-circle {
+    width: 90px !important;
+    height: 90px !important;
+  }
+
+  .ant-progress-circle .ant-progress-text {
+    font-size: 18px;
+    color: #1890ff;
+  }
+
+  .ant-card-body {
+    padding: 16px;
+  }
+
+  .ant-tooltip-inner {
+    font-size: 14px;
+    background-color: #1890ff;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+  }
+
+  .ant-tooltip-arrow {
+    border-color: #1890ff;
+  }
+
+  .ant-row {
+    margin-bottom: 20px;
+  }
   .ip-hidden {
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -100,48 +146,60 @@
               </a-row>
               <a-row v-else>
                 <a-row>
-                  <a-card hoverable>
-                    <a-row>
+                  <a-card hoverable class="status-card" :style="{ boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)', borderRadius: '12px' }">
+                    <a-row gutter={[24, 16]}>
+                      <!-- CPU Section -->
                       <a-col :sm="24" :md="12">
-                        <a-row>
-                          <a-col :span="12" style="text-align: center">
-                            <a-progress type="dashboard" status="normal"
-                              :stroke-color="status.cpu.color"
-                              :percent="status.cpu.percent"></a-progress>
-                            <div><b>CPU:</b> [[ CPUFormatter.cpuCoreFormat(status.cpuCores) ]] <a-tooltip>
-                              <a-icon type="area-chart"></a-icon> 
-                              <template slot="title">
-                                <div><b>Logical Processors:</b> [[ (status.logicalPro) ]]</div>
-                                <div><b>Speed:</b> [[ CPUFormatter.cpuSpeedFormat(status.cpuSpeedMhz) ]]</div>
-                              </template>
-                            </a-tooltip></div>
-                          </a-col>
-                          <a-col :span="12" style="text-align: center">
-                            <a-progress type="dashboard" status="normal"
-                              :stroke-color="status.mem.color"
-                              :percent="status.mem.percent"></a-progress>
-                            <div>
-                              <b>{{ i18n "pages.index.memory"}}:</b> [[ SizeFormatter.sizeFormat(status.mem.current) ]] / [[ SizeFormatter.sizeFormat(status.mem.total) ]]
+                        <a-row justify="center">
+                          <a-col :span="12" class="status-col">
+                            <a-progress type="dashboard" status="normal" :stroke-color="status.cpu.color" :percent="status.cpu.percent" :style="{ marginBottom: '20px' }" />
+                            <div class="status-details">
+                              <b>CPU:</b> [[ CPUFormatter.cpuCoreFormat(status.cpuCores) ]]
+                              <a-tooltip>
+                                <a-icon type="area-chart" style="font-size: 20px; color: #1890ff;" />
+                                <template slot="title">
+                                  <div><b>Logical Processors:</b> [[ status.logicalPro ]]</div>
+                                  <div><b>Speed:</b> [[ CPUFormatter.cpuSpeedFormat(status.cpuSpeedMhz) ]]</div>
+                                </template>
+                              </a-tooltip>
                             </div>
                           </a-col>
                         </a-row>
                       </a-col>
+              
+                      <!-- Memory Section -->
                       <a-col :sm="24" :md="12">
-                        <a-row>
-                          <a-col :span="12" style="text-align: center">
-                            <a-progress type="dashboard" status="normal"
-                              :stroke-color="status.swap.color"
-                              :percent="status.swap.percent"></a-progress>
-                            <div>
+                        <a-row justify="center">
+                          <a-col :span="12" class="status-col">
+                            <a-progress type="dashboard" status="normal" :stroke-color="status.mem.color" :percent="status.mem.percent" :style="{ marginBottom: '20px' }" />
+                            <div class="status-details">
+                              <b>{{ i18n "pages.index.memory" }}:</b> [[ SizeFormatter.sizeFormat(status.mem.current) ]] / [[ SizeFormatter.sizeFormat(status.mem.total) ]]
+                            </div>
+                          </a-col>
+                        </a-row>
+                      </a-col>
+                    </a-row>
+              
+                    <a-row gutter={[24, 16]}>
+                      <!-- Swap Section -->
+                      <a-col :sm="24" :md="12">
+                        <a-row justify="center">
+                          <a-col :span="12" class="status-col">
+                            <a-progress type="dashboard" status="normal" :stroke-color="status.swap.color" :percent="status.swap.percent" :style="{ marginBottom: '20px' }" />
+                            <div class="status-details">
                               <b>Swap:</b> [[ SizeFormatter.sizeFormat(status.swap.current) ]] / [[ SizeFormatter.sizeFormat(status.swap.total) ]]
                             </div>
                           </a-col>
-                          <a-col :span="12" style="text-align: center">
-                            <a-progress type="dashboard" status="normal"
-                              :stroke-color="status.disk.color"
-                              :percent="status.disk.percent"></a-progress>
-                            <div>
-                              <b>{{ i18n "pages.index.hard"}}:</b> [[ SizeFormatter.sizeFormat(status.disk.current) ]] / [[ SizeFormatter.sizeFormat(status.disk.total) ]]
+                        </a-row>
+                      </a-col>
+              
+                      <!-- Disk Section -->
+                      <a-col :sm="24" :md="12">
+                        <a-row justify="center">
+                          <a-col :span="12" class="status-col">
+                            <a-progress type="dashboard" status="normal" :stroke-color="status.disk.color" :percent="status.disk.percent" :style="{ marginBottom: '20px' }" />
+                            <div class="status-details">
+                              <b>{{ i18n "pages.index.hard" }}:</b> [[ SizeFormatter.sizeFormat(status.disk.current) ]] / [[ SizeFormatter.sizeFormat(status.disk.total) ]]
                             </div>
                           </a-col>
                         </a-row>
@@ -149,6 +207,7 @@
                     </a-row>
                   </a-card>
                 </a-row>
+              </a-row>
                 <a-col :sm="24" :lg="12">
                   <a-card hoverable>
                     <template #title>
