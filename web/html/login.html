@@ -380,11 +380,27 @@
   .ant-menu-inline .ant-menu-item {
     padding: 0 16px !important;
   }
+  .header {
+      text-align: center;
+      padding: 20px;
+      font-size: 36px;
+      font-weight: bold;
+      color: #333;
+      background-color: #f0f0f0;
+      margin-bottom: 20px; /* Adds space below the header */
+    }
 </style>
 <body>
   <a-layout id="app" v-cloak :class="themeSwitcher.currentTheme">
     <transition name="list" appear>
       <a-layout-content class="under" style="min-height: 0;">
+        
+        <!-- Header with "SL CAT VPN" -->
+        <div class="header">
+          <h1 class="title">SL CAT VPN</h1>
+        </div>
+        
+        <!-- Existing waves header -->
         <div class="waves-header">
           <div class="waves-inner-header"></div>
           <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -400,13 +416,15 @@
             </g>
           </svg>
         </div>
+
+        <!-- Content area -->
         <a-row type="flex" justify="center" align="middle" style="height: 100%; overflow: auto; overflow-x: hidden;">
           <a-col :xs="22" :sm="20" :md="14" :lg="10" :xl="8" :xxl="6" id="login" style="margin: 3rem 0;">
             <a-row type="flex" justify="center">
               <a-col style="width: 100%;">
                 <h1 class="title headline zoom">
                   <span class="words-wrapper">
-                    <b class="is-visible">{{ i18n "pages.login.hi" }}</b>
+                    <b class="is-visible">{{ i18n "pages.login.hello" }}</b>
                     <b>{{ i18n "pages.login.title" }}</b>
                   </span>
                 </h1>
@@ -472,6 +490,7 @@
       </a-layout-content>
     </transition>
   </a-layout>
+  
   {{template "js" .}}
   {{template "component/aThemeSwitch" .}}
   {{template "component/aPasswordInput" .}}
@@ -557,5 +576,6 @@
       }
     });
   </script>
+  
 </body>
 </html>
