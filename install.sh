@@ -166,7 +166,7 @@ install_x-ui() {
             exit 1
         fi
         echo -e "Got x-ui latest version: ${tag_version}, beginning the installation..."
-        wget -N -O /usr/local/x-ui-linux-arm64.tar.gz https://github.com/chanaka0indunil/3x-ui-sl-cat/releases/download/${tag_version}/x-ui-linux-arm64.tar.gz
+        wget -N -O /usr/local/x-ui-linux-$(arch).tar.gz https://github.com/chanaka0indunil/3x-ui-sl-cat/releases/download/${tag_version}/x-ui-linux-$(arch).tar.gz
         if [[ $? -ne 0 ]]; then
             echo -e "${red}Downloading x-ui failed, please be sure that your server can access GitHub ${plain}"
             exit 1
@@ -181,13 +181,18 @@ install_x-ui() {
             exit 1
         fi
 
-        url="https://github.com/chanaka0indunil/3x-ui-sl-cat/releases/download/${tag_version}/x-ui-linux-arm64.tar.gz"
+        url="https://github.com/chanaka0indunil/3x-ui-sl-cat/releases/download/${tag_version}/x-ui-linux-$(arch).tar.gz"
         echo -e "Beginning to install x-ui $1"
-        wget -N -O /usr/local/x-ui-linux-arm64.tar.gz ${url}
+        wget -N -O /usr/local/x-ui-linux-$(arch).tar.gz ${url}
         if [[ $? -ne 0 ]]; then
             echo -e "${red}Download x-ui $1 failed, please check if the version exists ${plain}"
             exit 1
         fi
+    fi
+
+    # Check if /usr/local/x-ui exists, if not create it
+    if [[ ! -d /usr/local/x-ui/ ]]; then
+        mkdir /usr/local/x-ui/
     fi
 
     if [[ -e /usr/local/x-ui/ ]]; then
@@ -195,18 +200,18 @@ install_x-ui() {
         rm /usr/local/x-ui/ -rf
     fi
 
-    tar zxvf x-ui-linux-arm64.tar.gz
-    rm x-ui-linux-arm64.tar.gz -f
-    cd x-ui
+    tar zxvf x-ui-linux-$(arch).tar.gz -C /usr/local/x-ui/
+    rm x-ui-linux-$(arch).tar.gz -f
+    cd /usr/local/x-ui/x-ui
     chmod +x x-ui
 
     # Check the system's architecture and rename the file accordingly
     if [[ $(arch) == "armv5" || $(arch) == "armv6" || $(arch) == "armv7" ]]; then
-        mv bin/xray-linux-arm64 bin/xray-linux-arm
+        mv bin/xray-linux-$(arch) bin/xray-linux-arm
         chmod +x bin/xray-linux-arm
     fi
 
-    chmod +x x-ui bin/xray-linux-arm64
+    chmod +x x-ui bin/xray-linux-$(arch)
     cp -f x-ui.service /etc/systemd/system/
     wget -O /usr/bin/x-ui https://raw.githubusercontent.com/chanaka0indunil/3x-ui-sl-cat/main/x-ui.sh
     chmod +x /usr/local/x-ui/x-ui.sh
@@ -217,34 +222,34 @@ install_x-ui() {
     systemctl enable x-ui
     systemctl start x-ui
     clear
-echo -e "${bold}${blue}${corner_top_left}$(printf '%0.s═' {1..50})${corner_top_right}${reset}"
-echo -e "${bold}${blue}${side}${reset}          ${red}🔥 SL CAT VPN 🔥${reset}          ${bold}${blue}${side}${reset}"
-echo -e "${bold}${blue}${corner_bottom_left}$(printf '%0.s═' {1..50})${corner_bottom_right}${reset}"
 
-# Installation completion message
-echo -e "${bold}${green}✔ x-ui ${tag_version} installation finished! It is now running...${reset}"
-echo -e ""
+    echo -e "${bold}${blue}${corner_top_left}$(printf '%0.s═' {1..50})${corner_top_right}${reset}"
+    echo -e "${bold}${blue}${side}${reset}          ${red}🔥 SL CAT VPN 🔥${reset}          ${bold}${blue}${side}${reset}"
+    echo -e "${bold}${blue}${corner_bottom_left}$(printf '%0.s═' {1..50})${corner_bottom_right}${reset}"
 
-# Display x-ui command menu
-echo -e "${bold}${blue}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${reset}"
-echo -e "${bold}${yellow} 📌 x-ui Control Menu (Subcommands):${reset}"
-echo -e "${bold}${blue}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${reset}"
-echo -e "${bold}${blue} ▶ x-ui${reset}              - Admin Management Script"
-echo -e "${bold}${blue} ▶ x-ui start${reset}        - Start x-ui"
-echo -e "${bold}${blue} ▶ x-ui stop${reset}         - Stop x-ui"
-echo -e "${bold}${blue} ▶ x-ui restart${reset}      - Restart x-ui"
-echo -e "${bold}${blue} ▶ x-ui status${reset}       - Show Current Status"
-echo -e "${bold}${blue} ▶ x-ui settings${reset}     - View Current Settings"
-echo -e "${bold}${blue} ▶ x-ui enable${reset}       - Enable Autostart on OS Startup"
-echo -e "${bold}${blue} ▶ x-ui disable${reset}      - Disable Autostart on OS Startup"
-echo -e "${bold}${blue} ▶ x-ui log${reset}          - View Logs"
-echo -e "${bold}${blue} ▶ x-ui banlog${reset}       - View Fail2ban Ban Logs"
-echo -e "${bold}${blue} ▶ x-ui update${reset}       - Update x-ui"
-echo -e "${bold}${blue} ▶ x-ui legacy${reset}       - Switch to Legacy Version"
-echo -e "${bold}${blue} ▶ x-ui install${reset}      - Install x-ui"
-echo -e "${bold}${blue} ▶ x-ui uninstall${reset}    - Uninstall x-ui"
-echo -e "${bold}${blue}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${reset}"
+    # Installation completion message
+    echo -e "${bold}${green}✔ x-ui ${tag_version} installation finished! It is now running...${reset}"
+    echo -e ""
 
+    # Display x-ui command menu
+    echo -e "${bold}${blue}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${reset}"
+    echo -e "${bold}${yellow} 📌 x-ui Control Menu (Subcommands):${reset}"
+    echo -e "${bold}${blue}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${reset}"
+    echo -e "${bold}${blue} ▶ x-ui${reset}              - Admin Management Script"
+    echo -e "${bold}${blue} ▶ x-ui start${reset}        - Start x-ui"
+    echo -e "${bold}${blue} ▶ x-ui stop${reset}         - Stop x-ui"
+    echo -e "${bold}${blue} ▶ x-ui restart${reset}      - Restart x-ui"
+    echo -e "${bold}${blue} ▶ x-ui status${reset}       - Show Current Status"
+    echo -e "${bold}${blue} ▶ x-ui settings${reset}     - View Current Settings"
+    echo -e "${bold}${blue} ▶ x-ui enable${reset}       - Enable Autostart on OS Startup"
+    echo -e "${bold}${blue} ▶ x-ui disable${reset}      - Disable Autostart on OS Startup"
+    echo -e "${bold}${blue} ▶ x-ui log${reset}          - View Logs"
+    echo -e "${bold}${blue} ▶ x-ui banlog${reset}       - View Fail2ban Ban Logs"
+    echo -e "${bold}${blue} ▶ x-ui update${reset}       - Update x-ui"
+    echo -e "${bold}${blue} ▶ x-ui legacy${reset}       - Switch to Legacy Version"
+    echo -e "${bold}${blue} ▶ x-ui install${reset}      - Install x-ui"
+    echo -e "${bold}${blue} ▶ x-ui uninstall${reset}    - Uninstall x-ui"
+    echo -e "${bold}${blue}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${reset}"
 }
 
 echo -e "${green}Running...${plain}"
