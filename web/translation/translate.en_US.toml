@@ -78,8 +78,8 @@
 "link" = "Manage"
 
 [pages.login]
-"hello" = "Hello"
-"title" = "Welcome"
+"hello" = "SL CAT"
+"title" = "VPN"
 "loginAgain" = "Your session has expired, please log in again"
 
 [pages.login.toasts]
