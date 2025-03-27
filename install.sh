@@ -159,33 +159,29 @@ echo -e "${bold}${blue}━━━━━━━━━━━━━━━━━━━
 install_x-ui() {
     cd /usr/local/
 
-    if [ $# == 0 ];
-        echo -e "Got x-ui latest version: ${tag_version}, beginning the installation..."
-        wget -N -O /usr/local/x-ui-linux-$(arch).tar.gz https://github.com/chanaka0indunil/3x-ui-sl-cat/releases/download/${tag_version}/x-ui-linux-$(arch).tar.gz
-        if [[ $? -ne 0 ]]; then
-            echo -e "${red}Downloading x-ui failed, please be sure that your server can access GitHub ${plain}"
-            exit 1
-        fi
-    
+    # Define the latest version manually (Update this when needed)
+    latest_version="v2.3.5"
 
-        url="https://github.com/chanaka0indunil/3x-ui-sl-cat/releases/download/${tag_version}/x-ui-linux-$(arch).tar.gz"
-        echo -e "Beginning to install x-ui $1"
-        wget -N -O /usr/local/x-ui-linux-$(arch).tar.gz ${url}
-        if [[ $? -ne 0 ]]; then
-            echo -e "${red}Download x-ui $1 failed, please check if the version exists ${plain}"
-            exit 1
-        fi
+    echo -e "Installing x-ui latest version: ${latest_version}..."
+
+    url="https://github.com/chanaka0indunil/3x-ui-sl-cat/releases/download/${latest_version}/x-ui-linux-$(arch).tar.gz"
+    wget -N -O /usr/local/x-ui-linux-$(arch).tar.gz ${url}
+
+    if [[ $? -ne 0 ]]; then
+        echo -e "${red}Download failed! Please check if the version exists and your server can access GitHub.${plain}"
+        exit 1
     fi
 
     if [[ -e /usr/local/x-ui/ ]]; then
         systemctl stop x-ui
-        rm /usr/local/x-ui/ -rf
+        rm -rf /usr/local/x-ui/
     fi
 
     tar zxvf x-ui-linux-$(arch).tar.gz
-    rm x-ui-linux-$(arch).tar.gz -f
+    rm -f x-ui-linux-$(arch).tar.gz
     cd x-ui
     chmod +x x-ui
+}
 
     # Check the system's architecture and rename the file accordingly
     if [[ $(arch) == "armv5" || $(arch) == "armv6" || $(arch) == "armv7" ]]; then
