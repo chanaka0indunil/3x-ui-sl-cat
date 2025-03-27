@@ -228,7 +228,6 @@ echo -e "${bold}${blue} ▶ x-ui install${reset}      - Install x-ui"
 echo -e "${bold}${blue} ▶ x-ui uninstall${reset}    - Uninstall x-ui"
 echo -e "${bold}${blue}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${reset}"
 
-}
 
 echo -e "${green}Running...${plain}"
 install_base
