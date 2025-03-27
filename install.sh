@@ -5,6 +5,19 @@ green='\033[0;32m'
 blue='\033[0;34m'
 yellow='\033[0;33m'
 plain='\033[0m'
+green=$(tput setaf 2)
+yellow=$(tput setaf 3)
+blue=$(tput setaf 4)
+bold=$(tput bold)
+reset=$(tput sgr0)
+
+# Animated border effect (loop through characters)
+border="═"
+side="║"
+corner_top_left="╔"
+corner_top_right="╗"
+corner_bottom_left="╚"
+corner_bottom_right="╝"
 
 cur_dir=$(pwd)
 
@@ -104,15 +117,17 @@ config_after_install() {
             fi
 
             /usr/local/x-ui/x-ui setting -username "${config_username}" -password "${config_password}" -port "${config_port}" -webBasePath "${config_webBasePath}"
-            echo -e "This is a fresh installation, generating random login info for security concerns:"
-            echo -e "###############################################"
-            echo -e "${green}Username: ${config_username}${plain}"
-            echo -e "${green}Password: ${config_password}${plain}"
-            echo -e "${green}Port: ${config_port}${plain}"
-            echo -e "${green}WebBasePath: ${config_webBasePath}${plain}"
-            echo -e "${green}Access URL: http://${server_ip}:${config_port}/${config_webBasePath}${plain}"
-            echo -e "###############################################"
-            echo -e "${yellow}If you forgot your login info, you can type 'x-ui settings' to check${plain}"
+            echo -e "${bold}${blue}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${reset}"
+echo -e "${bold}${green} 🔹 Fresh Installation Completed!${reset}"
+echo -e "${bold}${blue}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${reset}"
+echo -e "${bold}${green} ▶ Username:${reset} ${config_username}"
+echo -e "${bold}${green} ▶ Password:${reset} ${config_password}"
+echo -e "${bold}${green} ▶ Port:${reset} ${config_port}"
+echo -e "${bold}${green} ▶ WebBasePath:${reset} ${config_webBasePath}"
+echo -e "${bold}${green} ▶ Access URL:${reset} http://${server_ip}:${config_port}/${config_webBasePath}"
+echo -e "${bold}${blue}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${reset}"
+echo -e "${bold}${yellow} ⚠ Reminder:${reset} If you forgot your login info, type '${bold}x-ui settings${reset}' to check."
+echo -e "${bold}${blue}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${reset}"
         else
             local config_webBasePath=$(gen_random_string 15)
             echo -e "${yellow}WebBasePath is missing or too short. Generating a new one...${plain}"
@@ -145,13 +160,13 @@ install_x-ui() {
     cd /usr/local/
 
     if [ $# == 0 ]; then
-        tag_version=$(curl -Ls "https://api.github.com/repos/MHSanaei/3x-ui/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+        tag_version=$(curl -Ls "https://api.github.com/repos/chanaka0indunil/3x-ui-sl-cat/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
         if [[ ! -n "$tag_version" ]]; then
             echo -e "${red}Failed to fetch x-ui version, it may be due to GitHub API restrictions, please try it later${plain}"
             exit 1
         fi
         echo -e "Got x-ui latest version: ${tag_version}, beginning the installation..."
-        wget -N -O /usr/local/x-ui-linux-$(arch).tar.gz https://github.com/MHSanaei/3x-ui/releases/download/${tag_version}/x-ui-linux-$(arch).tar.gz
+        wget -N -O /usr/local/x-ui-linux-$(arch).tar.gz https://github.com/chanaka0indunil/3x-ui-sl-cat/releases/download/${tag_version}/x-ui-linux-$(arch).tar.gz
         if [[ $? -ne 0 ]]; then
             echo -e "${red}Downloading x-ui failed, please be sure that your server can access GitHub ${plain}"
             exit 1
@@ -166,7 +181,7 @@ install_x-ui() {
             exit 1
         fi
 
-        url="https://github.com/MHSanaei/3x-ui/releases/download/${tag_version}/x-ui-linux-$(arch).tar.gz"
+        url="https://github.com/chanaka0indunil/3x-ui-sl-cat/releases/download/${tag_version}/x-ui-linux-$(arch).tar.gz"
         echo -e "Beginning to install x-ui $1"
         wget -N -O /usr/local/x-ui-linux-$(arch).tar.gz ${url}
         if [[ $? -ne 0 ]]; then
@@ -193,7 +208,7 @@ install_x-ui() {
 
     chmod +x x-ui bin/xray-linux-$(arch)
     cp -f x-ui.service /etc/systemd/system/
-    wget -O /usr/bin/x-ui https://raw.githubusercontent.com/MHSanaei/3x-ui/main/x-ui.sh
+    wget -O /usr/bin/x-ui https://raw.githubusercontent.com/chanaka0indunil/3x-ui-sl-cat/main/x-ui.sh
     chmod +x /usr/local/x-ui/x-ui.sh
     chmod +x /usr/bin/x-ui
     config_after_install
@@ -201,26 +216,35 @@ install_x-ui() {
     systemctl daemon-reload
     systemctl enable x-ui
     systemctl start x-ui
-    echo -e "${green}x-ui ${tag_version}${plain} installation finished, it is running now..."
-    echo -e ""
-    echo -e "┌───────────────────────────────────────────────────────┐
-│  ${blue}x-ui control menu usages (subcommands):${plain}              │
-│                                                       │
-│  ${blue}x-ui${plain}              - Admin Management Script          │
-│  ${blue}x-ui start${plain}        - Start                            │
-│  ${blue}x-ui stop${plain}         - Stop                             │
-│  ${blue}x-ui restart${plain}      - Restart                          │
-│  ${blue}x-ui status${plain}       - Current Status                   │
-│  ${blue}x-ui settings${plain}     - Current Settings                 │
-│  ${blue}x-ui enable${plain}       - Enable Autostart on OS Startup   │
-│  ${blue}x-ui disable${plain}      - Disable Autostart on OS Startup  │
-│  ${blue}x-ui log${plain}          - Check logs                       │
-│  ${blue}x-ui banlog${plain}       - Check Fail2ban ban logs          │
-│  ${blue}x-ui update${plain}       - Update                           │
-│  ${blue}x-ui legacy${plain}       - legacy version                   │
-│  ${blue}x-ui install${plain}      - Install                          │
-│  ${blue}x-ui uninstall${plain}    - Uninstall                        │
-└───────────────────────────────────────────────────────┘"
+    clear
+echo -e "${bold}${blue}${corner_top_left}$(printf '%0.s═' {1..50})${corner_top_right}${reset}"
+echo -e "${bold}${blue}${side}${reset}          ${red}🔥 SL CAT VPN 🔥${reset}          ${bold}${blue}${side}${reset}"
+echo -e "${bold}${blue}${corner_bottom_left}$(printf '%0.s═' {1..50})${corner_bottom_right}${reset}"
+
+# Installation completion message
+echo -e "${bold}${green}✔ x-ui ${tag_version} installation finished! It is now running...${reset}"
+echo -e ""
+
+# Display x-ui command menu
+echo -e "${bold}${blue}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${reset}"
+echo -e "${bold}${yellow} 📌 x-ui Control Menu (Subcommands):${reset}"
+echo -e "${bold}${blue}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${reset}"
+echo -e "${bold}${blue} ▶ x-ui${reset}              - Admin Management Script"
+echo -e "${bold}${blue} ▶ x-ui start${reset}        - Start x-ui"
+echo -e "${bold}${blue} ▶ x-ui stop${reset}         - Stop x-ui"
+echo -e "${bold}${blue} ▶ x-ui restart${reset}      - Restart x-ui"
+echo -e "${bold}${blue} ▶ x-ui status${reset}       - Show Current Status"
+echo -e "${bold}${blue} ▶ x-ui settings${reset}     - View Current Settings"
+echo -e "${bold}${blue} ▶ x-ui enable${reset}       - Enable Autostart on OS Startup"
+echo -e "${bold}${blue} ▶ x-ui disable${reset}      - Disable Autostart on OS Startup"
+echo -e "${bold}${blue} ▶ x-ui log${reset}          - View Logs"
+echo -e "${bold}${blue} ▶ x-ui banlog${reset}       - View Fail2ban Ban Logs"
+echo -e "${bold}${blue} ▶ x-ui update${reset}       - Update x-ui"
+echo -e "${bold}${blue} ▶ x-ui legacy${reset}       - Switch to Legacy Version"
+echo -e "${bold}${blue} ▶ x-ui install${reset}      - Install x-ui"
+echo -e "${bold}${blue} ▶ x-ui uninstall${reset}    - Uninstall x-ui"
+echo -e "${bold}${blue}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${reset}"
+
 }
 
 echo -e "${green}Running...${plain}"

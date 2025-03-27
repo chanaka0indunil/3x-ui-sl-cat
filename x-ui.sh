@@ -5,6 +5,13 @@ green='\033[0;32m'
 blue='\033[0;34m'
 yellow='\033[0;33m'
 plain='\033[0m'
+# Define colors using tput
+green=$(tput setaf 2)
+blue=$(tput setaf 4)
+yellow=$(tput setaf 3)
+red=$(tput setaf 1)
+bold=$(tput bold)
+reset=$(tput sgr0)
 
 #Add some basic function here
 function LOGD() {
@@ -87,7 +94,7 @@ before_show_menu() {
 }
 
 install() {
-    bash <(curl -Ls https://raw.githubusercontent.com/MHSanaei/3x-ui/main/install.sh)
+    bash <(curl -Ls https://raw.githubusercontent.com/chanaka0indunil/3x-ui-sl-cat/main/install.sh)
     if [[ $? == 0 ]]; then
         if [[ $# == 0 ]]; then
             start
@@ -106,7 +113,7 @@ update() {
         fi
         return 0
     fi
-    bash <(curl -Ls https://raw.githubusercontent.com/MHSanaei/3x-ui/main/install.sh)
+    bash <(curl -Ls https://raw.githubusercontent.com/chanaka0indunil/3x-ui-sl-cat/main/install.sh)
     if [[ $? == 0 ]]; then
         LOGI "Update is complete, Panel has automatically restarted "
         before_show_menu
@@ -124,7 +131,7 @@ update_menu() {
         return 0
     fi
 
-    wget -O /usr/bin/x-ui https://raw.githubusercontent.com/MHSanaei/3x-ui/main/x-ui.sh
+    wget -O /usr/bin/x-ui https://raw.githubusercontent.com/chanaka0indunil/3x-ui-sl-cat/main/x-ui.sh
     chmod +x /usr/local/x-ui/x-ui.sh
     chmod +x /usr/bin/x-ui
 
@@ -146,7 +153,7 @@ legacy_version() {
         exit 1
     fi
     # Use the entered panel version in the download link
-    install_command="bash <(curl -Ls "https://raw.githubusercontent.com/mhsanaei/3x-ui/v$tag_version/install.sh") v$tag_version"
+    install_command="bash <(curl -Ls "https://raw.githubusercontent.com/chanaka0indunil/3x-ui-sl-cat/v$tag_version/install.sh") v$tag_version"
 
     echo "Downloading and installing panel version $tag_version..."
     eval $install_command
@@ -177,7 +184,7 @@ uninstall() {
     echo ""
     echo -e "Uninstalled Successfully.\n"
     echo "If you need to install this panel again, you can use below command:"
-    echo -e "${green}bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh)${plain}"
+    echo -e "${green}bash <(curl -Ls https://raw.githubusercontent.com/chanaka0indunil/3x-ui-sl-cat/main/install.sh)${plain}"
     echo ""
     # Trap the SIGTERM signal
     trap delete_script SIGTERM
@@ -519,7 +526,7 @@ enable_bbr() {
 }
 
 update_shell() {
-    wget -O /usr/bin/x-ui -N https://github.com/MHSanaei/3x-ui/raw/main/x-ui.sh
+    wget -O /usr/bin/x-ui -N https://github.com/chanaka0indunil/3x-ui-sl-cat/raw/main/x-ui.sh
     if [[ $? != 0 ]]; then
         echo ""
         LOGE "Failed to download script, Please check whether the machine can connect Github"
@@ -1712,64 +1719,73 @@ SSH_port_forwarding() {
 }
 
 show_usage() {
-    echo -e "┌───────────────────────────────────────────────────────┐
-│  ${blue}x-ui control menu usages (subcommands):${plain}              │
-│                                                       │
-│  ${blue}x-ui${plain}              - Admin Management Script          │
-│  ${blue}x-ui start${plain}        - Start                            │
-│  ${blue}x-ui stop${plain}         - Stop                             │
-│  ${blue}x-ui restart${plain}      - Restart                          │
-│  ${blue}x-ui status${plain}       - Current Status                   │
-│  ${blue}x-ui settings${plain}     - Current Settings                 │
-│  ${blue}x-ui enable${plain}       - Enable Autostart on OS Startup   │
-│  ${blue}x-ui disable${plain}      - Disable Autostart on OS Startup  │
-│  ${blue}x-ui log${plain}          - Check logs                       │
-│  ${blue}x-ui banlog${plain}       - Check Fail2ban ban logs          │
-│  ${blue}x-ui update${plain}       - Update                           │
-│  ${blue}x-ui legacy${plain}       - legacy version                   │
-│  ${blue}x-ui install${plain}      - Install                          │
-│  ${blue}x-ui uninstall${plain}    - Uninstall                        │
-└───────────────────────────────────────────────────────┘"
+    # Header - Branding
+echo -e "${bold}${blue}╔═══════════════════════════════════════════════════╗${reset}"
+echo -e "${bold}${blue}║${reset}            ${red}🔥 X-UI Control Panel 🔥${reset}             ${bold}${blue}║${reset}"
+echo -e "${bold}${blue}╚═══════════════════════════════════════════════════╝${reset}"
+
+# Display Menu
+echo -e "${bold}${yellow} 📌 x-ui Control Menu (Subcommands):${reset}"
+echo -e "${bold}${blue}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${reset}"
+echo -e "${bold}${green} ▶ x-ui${reset}              - 🛠 Admin Management Script"
+echo -e "${bold}${green} ▶ x-ui start${reset}        - ▶ Start"
+echo -e "${bold}${green} ▶ x-ui stop${reset}         - ⏹ Stop"
+echo -e "${bold}${green} ▶ x-ui restart${reset}      - 🔁 Restart"
+echo -e "${bold}${green} ▶ x-ui status${reset}       - 📊 Current Status"
+echo -e "${bold}${green} ▶ x-ui settings${reset}     - ⚙️ Current Settings"
+echo -e "${bold}${blue}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${reset}"
+echo -e "${bold}${green} ▶ x-ui enable${reset}       - 🚀 Enable Autostart on OS Startup"
+echo -e "${bold}${green} ▶ x-ui disable${reset}      - ❌ Disable Autostart on OS Startup"
+echo -e "${bold}${green} ▶ x-ui log${reset}          - 📜 Check Logs"
+echo -e "${bold}${green} ▶ x-ui banlog${reset}       - 🔥 Check Fail2ban Ban Logs"
+echo -e "${bold}${blue}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${reset}"
+echo -e "${bold}${green} ▶ x-ui update${reset}       - 🔄 Update"
+echo -e "${bold}${green} ▶ x-ui legacy${reset}       - ⏳ Legacy Version"
+echo -e "${bold}${green} ▶ x-ui install${reset}      - 📥 Install"
+echo -e "${bold}${green} ▶ x-ui uninstall${reset}    - ❌ Uninstall"
+echo -e "${bold}${blue}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${reset}"
 }
 
 show_menu() {
-    echo -e "
-╔────────────────────────────────────────────────╗
-│   ${green}3X-UI Panel Management Script${plain}                │
-│   ${green}0.${plain} Exit Script                               │
-│────────────────────────────────────────────────│
-│   ${green}1.${plain} Install                                   │
-│   ${green}2.${plain} Update                                    │
-│   ${green}3.${plain} Update Menu                               │
-│   ${green}4.${plain} Legacy Version                            │
-│   ${green}5.${plain} Uninstall                                 │
-│────────────────────────────────────────────────│
-│   ${green}6.${plain} Reset Username & Password & Secret Token  │
-│   ${green}7.${plain} Reset Web Base Path                       │
-│   ${green}8.${plain} Reset Settings                            │
-│   ${green}9.${plain} Change Port                               │
-│  ${green}10.${plain} View Current Settings                     │
-│────────────────────────────────────────────────│
-│  ${green}11.${plain} Start                                     │
-│  ${green}12.${plain} Stop                                      │
-│  ${green}13.${plain} Restart                                   │
-│  ${green}14.${plain} Check Status                              │
-│  ${green}15.${plain} Logs Management                           │
-│────────────────────────────────────────────────│
-│  ${green}16.${plain} Enable Autostart                          │
-│  ${green}17.${plain} Disable Autostart                         │
-│────────────────────────────────────────────────│
-│  ${green}18.${plain} SSL Certificate Management                │
-│  ${green}19.${plain} Cloudflare SSL Certificate                │
-│  ${green}20.${plain} IP Limit Management                       │
-│  ${green}21.${plain} Firewall Management                       │
-│  ${green}22.${plain} SSH Port Forwarding Management            │
-│────────────────────────────────────────────────│
-│  ${green}23.${plain} Enable BBR                                │
-│  ${green}24.${plain} Update Geo Files                          │
-│  ${green}25.${plain} Speedtest by Ookla                        │
-╚────────────────────────────────────────────────╝
-"
+    # Header - Branding for 3X-UI Panel
+echo -e "${bold}${blue}╔════════════════════════════════════════════════════╗${reset}"
+echo -e "${bold}${blue}║${reset}          ${red}🔥 3X-UI Panel Management Script 🔥${reset}          ${bold}${blue}║${reset}"
+echo -e "${bold}${blue}╚════════════════════════════════════════════════════╝${reset}"
+
+# Display Menu
+echo -e "${bold}${green}  0.${reset} ❌ Exit Script"
+echo -e "${bold}${blue}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${reset}"
+echo -e "${bold}${green}  1.${reset} 📥 Install"
+echo -e "${bold}${green}  2.${reset} 🔄 Update"
+echo -e "${bold}${green}  3.${reset} 🛠  Update Menu"
+echo -e "${bold}${green}  4.${reset} ⏳ Legacy Version"
+echo -e "${bold}${green}  5.${reset} ❌ Uninstall"
+echo -e "${bold}${blue}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${reset}"
+echo -e "${bold}${green}  6.${reset} 🔑 Reset Username & Password & Secret Token"
+echo -e "${bold}${green}  7.${reset} 🌐 Reset Web Base Path"
+echo -e "${bold}${green}  8.${reset} ⚙️ Reset Settings"
+echo -e "${bold}${green}  9.${reset} 🔧 Change Port"
+echo -e "${bold}${green} 10.${reset} 📄 View Current Settings"
+echo -e "${bold}${blue}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${reset}"
+echo -e "${bold}${green} 11.${reset} ▶ Start"
+echo -e "${bold}${green} 12.${reset} ⏹ Stop"
+echo -e "${bold}${green} 13.${reset} 🔁 Restart"
+echo -e "${bold}${green} 14.${reset} 📊 Check Status"
+echo -e "${bold}${green} 15.${reset} 📜 Logs Management"
+echo -e "${bold}${blue}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${reset}"
+echo -e "${bold}${green} 16.${reset} 🚀 Enable Autostart"
+echo -e "${bold}${green} 17.${reset} ❌ Disable Autostart"
+echo -e "${bold}${blue}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${reset}"
+echo -e "${bold}${green} 18.${reset} 🔒 SSL Certificate Management"
+echo -e "${bold}${green} 19.${reset} ☁️ Cloudflare SSL Certificate"
+echo -e "${bold}${green} 20.${reset} 🔢 IP Limit Management"
+echo -e "${bold}${green} 21.${reset} 🔥 Firewall Management"
+echo -e "${bold}${green} 22.${reset} 🛜 SSH Port Forwarding Management"
+echo -e "${bold}${blue}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${reset}"
+echo -e "${bold}${green} 23.${reset} 🚀 Enable BBR"
+echo -e "${bold}${green} 24.${reset} 🌍 Update Geo Files"
+echo -e "${bold}${green} 25.${reset} 🚀 Speedtest by Ookla"
+echo -e "${bold}${blue}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${reset}"
     show_status
     echo && read -p "Please enter your selection [0-25]: " num
 
