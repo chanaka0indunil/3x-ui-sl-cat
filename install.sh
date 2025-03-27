@@ -190,20 +190,15 @@ install_x-ui() {
         fi
     fi
 
-    # Check if /usr/local/x-ui exists, if not create it
-    if [[ ! -d /usr/local/x-ui/ ]]; then
-        mkdir /usr/local/x-ui/
-    fi
-
     if [[ -e /usr/local/x-ui/ ]]; then
         systemctl stop x-ui
         rm /usr/local/x-ui/ -rf
     fi
 
-    tar zxvf x-ui-linux-$(arch).tar.gz -C /usr/local/x-ui/
+    tar zxvf x-ui-linux-$(arch).tar.gz
     rm x-ui-linux-$(arch).tar.gz -f
-    cd /usr/local/x-ui/x-ui
-    chmod +x x-ui
+    cd x-ui
+    chmod +x x-ui 
 
     # Check the system's architecture and rename the file accordingly
     if [[ $(arch) == "armv5" || $(arch) == "armv6" || $(arch) == "armv7" ]]; then
