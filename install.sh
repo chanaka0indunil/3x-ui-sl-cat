@@ -159,18 +159,16 @@ echo -e "${bold}${blue}━━━━━━━━━━━━━━━━━━━
 install_x-ui() {
     cd /usr/local/
 
-    if [ $# == 0 ]; then
-        echo -e "${red}Please provide the version to install.${plain}"
+    # Default version if none is provided
+    tag_version="v2.3.5"
+    echo -e "No version provided, installing default version: ${tag_version}"
+
+    url="https://github.com/chanaka0indunil/3x-ui-sl-cat/releases/download/${tag_version}/x-ui-linux-$(arch).tar.gz"
+    echo -e "Beginning to install x-ui $tag_version"
+    wget -N -O /usr/local/x-ui-linux-$(arch).tar.gz ${url}
+    if [[ $? -ne 0 ]]; then
+        echo -e "${red}Download x-ui $tag_version failed, please check if the version exists.${plain}"
         exit 1
-    else
-        tag_version=$1
-        url="https://github.com/chanaka0indunil/3x-ui-sl-cat/releases/download/${tag_version}/x-ui-linux-$(arch).tar.gz"
-        echo -e "Beginning to install x-ui $1"
-        wget -N -O /usr/local/x-ui-linux-$(arch).tar.gz ${url}
-        if [[ $? -ne 0 ]]; then
-            echo -e "${red}Download x-ui $1 failed, please check if the version exists.${plain}"
-            exit 1
-        fi
     fi
 
     if [[ -e /usr/local/x-ui/ ]]; then
@@ -231,5 +229,5 @@ install_x-ui() {
 
 echo -e "${green}Running...${plain}"
 install_base
-install_x-ui $1
+install_x-ui
 
