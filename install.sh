@@ -159,27 +159,14 @@ echo -e "${bold}${blue}━━━━━━━━━━━━━━━━━━━
 install_x-ui() {
     cd /usr/local/
 
-    if [ $# == 0 ]; then
-        tag_version=$(curl -Ls "https://api.github.com/repos/chanaka0indunil/3x-ui-sl-cat/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
-        if [[ ! -n "$tag_version" ]]; then
-            echo -e "${red}Failed to fetch x-ui version, it may be due to GitHub API restrictions, please try it later${plain}"
-            exit 1
-        fi
+    if [ $# == 0 ];
         echo -e "Got x-ui latest version: ${tag_version}, beginning the installation..."
         wget -N -O /usr/local/x-ui-linux-$(arch).tar.gz https://github.com/chanaka0indunil/3x-ui-sl-cat/releases/download/${tag_version}/x-ui-linux-$(arch).tar.gz
         if [[ $? -ne 0 ]]; then
             echo -e "${red}Downloading x-ui failed, please be sure that your server can access GitHub ${plain}"
             exit 1
         fi
-    else
-        tag_version=$1
-        tag_version_numeric=${tag_version#v}
-        min_version="2.3.5"
-
-        if [[ "$(printf '%s\n' "$min_version" "$tag_version_numeric" | sort -V | head -n1)" != "$min_version" ]]; then
-            echo -e "${red}Please use a newer version (at least v2.3.5). Exiting installation.${plain}"
-            exit 1
-        fi
+    
 
         url="https://github.com/chanaka0indunil/3x-ui-sl-cat/releases/download/${tag_version}/x-ui-linux-$(arch).tar.gz"
         echo -e "Beginning to install x-ui $1"
