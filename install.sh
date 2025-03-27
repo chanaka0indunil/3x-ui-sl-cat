@@ -190,15 +190,23 @@ install_x-ui() {
         fi
     fi
 
-    if [[ -e /usr/local/x-ui/ ]]; then
-        systemctl stop x-ui
-        rm /usr/local/x-ui/ -rf
+    # Create /usr/local/x-ui if not already exists
+    if [ ! -d "/usr/local/x-ui" ]; then
+        mkdir -p /usr/local/x-ui
     fi
 
+    # Extract the downloaded file
     tar zxvf x-ui-linux-$(arch).tar.gz
-    rm x-ui-linux-$(arch).tar.gz -f
+    rm -f x-ui-linux-$(arch).tar.gz
+
+    if [ ! -e /usr/local/x-ui/ ]; then
+        echo -e "${red}Failed to extract x-ui files, exiting...${plain}"
+        exit 1
+    fi
+
+    # Change to the x-ui directory
     cd x-ui
-    chmod +x x-ui 
+    chmod +x x-ui
 
     # Check the system's architecture and rename the file accordingly
     if [[ $(arch) == "armv5" || $(arch) == "armv6" || $(arch) == "armv7" ]]; then
@@ -211,8 +219,10 @@ install_x-ui() {
     wget -O /usr/bin/x-ui https://raw.githubusercontent.com/chanaka0indunil/3x-ui-sl-cat/main/x-ui.sh
     chmod +x /usr/local/x-ui/x-ui.sh
     chmod +x /usr/bin/x-ui
+
     config_after_install
 
+    # Reload systemd, enable and start the x-ui service
     systemctl daemon-reload
     systemctl enable x-ui
     systemctl start x-ui
@@ -246,6 +256,7 @@ install_x-ui() {
     echo -e "${bold}${blue} ▶ x-ui uninstall${reset}    - Uninstall x-ui"
     echo -e "${bold}${blue}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${reset}"
 }
+
 
 echo -e "${green}Running...${plain}"
 install_base
